@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
 
 	flag "github.com/spf13/pflag"
@@ -397,14 +398,16 @@ func runControllers(ctx *ingctx.ControllerContext) {
 
 	ctx.Start(stopCh)
 
-	igControllerParams := &instancegroups.ControllerConfig{
-		NodeInformer: ctx.NodeInformer,
-		IGManager:    ctx.InstancePool,
-		HasSynced:    ctx.HasSynced,
-		StopCh:       stopCh,
+	if strings.ToLower(os.Getenv("EXPERIMENTAL_ONLY_FOR_TESTING_DISABLE_INSTANCE_GROUP_CONTROLLER")) != "true" {
+		igControllerParams := &instancegroups.ControllerConfig{
+			NodeInformer: ctx.NodeInformer,
+			IGManager:    ctx.InstancePool,
+			HasSynced:    ctx.HasSynced,
+			StopCh:       stopCh,
+		}
+		igController := instancegroups.NewController(igControllerParams)
+		go igController.Run()
 	}
-	igController := instancegroups.NewController(igControllerParams)
-	go igController.Run()
 
 	// The L4NetLbController will be run when RbsMode flag is Set
 	if flags.F.RunL4NetLBController {

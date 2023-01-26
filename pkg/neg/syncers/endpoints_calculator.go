@@ -75,14 +75,14 @@ func (l *LocalL4ILBEndpointsCalculator) CalculateEndpoints(eds []types.Endpoints
 	candidateNodeCheck := utils.CandidateNodesPredicateIncludeUnreadyExcludeUpgradingNodes
 	for _, ed := range eds {
 		for _, addr := range ed.Addresses {
-			if addr.NodeName == nil {
-				l.logger.V(2).Info("Address inside Endpoints does not have an associated node. Skipping", "address", addr.Addresses, "endpoints", klog.KRef(ed.Meta.Namespace, ed.Meta.Name))
-				continue
-			}
-			if addr.TargetRef == nil {
-				l.logger.V(2).Info("Address inside Endpoints does not have an associated pod. Skipping", "address", addr.Addresses, "endpoints", klog.KRef(ed.Meta.Namespace, ed.Meta.Name))
-				continue
-			}
+			// if addr.NodeName == nil {
+			// 	l.logger.V(2).Info("Address inside Endpoints does not have an associated node. Skipping", "address", addr.Addresses, "endpoints", klog.KRef(ed.Meta.Namespace, ed.Meta.Name))
+			// 	continue
+			// }
+			// if addr.TargetRef == nil {
+			// 	l.logger.V(2).Info("Address inside Endpoints does not have an associated pod. Skipping", "address", addr.Addresses, "endpoints", klog.KRef(ed.Meta.Namespace, ed.Meta.Name))
+			// 	continue
+			// }
 			numEndpoints++
 			if processedNodes.Has(*addr.NodeName) {
 				continue
